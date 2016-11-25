@@ -1,196 +1,220 @@
-#å…ˆå°‡R Studioä¹‹å‰çš„èƒŒæ™¯è³‡æ–™åˆªé™¤æ‰
+#¥ı²M°£¤§«eªº­I´º¸ê®Æ¡A¨Ã«Ø¥ßtsªí¥Ü¼gcodeªº¤é´Á¡B®É¶¡
 rm(list = ls())
 ts <- 2016111815
 
-
-#1. è¼¸å…¥è³‡æ–™ï¼š
-#åˆ©ç”¨ç¬¬ä¸‰æ–¹å¥—ä»¶data.tableè®€å–æ‰€è¦çš„è³‡æ–™
+#1. Åª¨ú¸ê®Æ‹óŠÔ
+#§Q¥Îddata.tableÅª¨ú¸ê®Æ—¿
 library(data.table)
 
-
-#å°‡ç›®æ¨™dataæ‰€åœ¨çš„è³‡æ–™å¤¾è¨­ç‚ºç›®éŒ„ï¼Œä¸¦å»ºç«‹ä¸€å€‹ç©ºçš„æª”æ¡ˆï¼Œä½œç‚ºç­‰ç­‰æ‰€æœ‰dataè¦æ”¾å…¥çš„åœ°æ–¹
+#³]¥ß¤u§@¥Ø¿ı¡A¥H«K¦b¦¹¥Ø¿ı¤¤¶i¦æ«ü¥Oªº¼¶¼g©M¾Ş§@
 setwd("c:\\Users/admin/Desktop/raw/")
+
+#«Ø¥ßªÅªºÀÉ®×ªÅ¶¡¡A±N¥Ø¿ı¤¤©Ò¦³ÀÉ®×ªºdata©ñ¶i¥h
 list <- list.files('.')
 wed <- list()
+
+#­pºâÅª¤JªÅÀÉ®×¤¤ªºÀÉ®×¼Æ¬°¦h¤Ö
 length(list)
 
 
-#2. æ•´ç†è³‡æ–™ï¼š
-#è³‡æ–™å¤¾ä¸­çš„æ‰€æœ‰dataéƒ½è®€å–åˆ°æ–°å»ºç«‹çš„æª”æ¡ˆä¸­ï¼Œä¸¦å°‡-9991, -9995-9996, -9997, -9998, -9999çš„dataæ›¿æ›æˆNA
+
+
+#2. ¸ê®Æªºªì¨B¾ã²z
+#§Q¥Îfor°j°é±N¸ê®Æ¤¤¬°ˆ×-9991, -9995, -9996, -9997, -9998, -9999ªº¿ù»~¼Æ­È§ï¬°NA
 for(i in 1:length(list)){ wed[[i]] <- fread (list[i],
   skip = 75,
   na.strings = c('-9991', '-9995', '-9996', '-9997', '-9998', '-9999'))
       }
-#åˆ©ç”¨forè¿´åœˆåŠrbindå°‡æ¯å€‹åŸå§‹æª”æ¡ˆå…§çš„dataä¸€å€‹å€‹å¾€ä¸‹å †ç–Šåˆä½µæˆåŒä¸€å€‹è¡¨æ ¼
+
+#§Q¥Îrbind±N¸ê®Æªí®æ¤@­Ó­Ó©¹¤UÅ|¥[¦X¨Ö°_¨Ó
 for (i in 2:length(list)){
   wed[[1]] <- rbind(wed[[1]], wed[[i]])
 }
 
-#å°‡åˆä½µå¥½å¾Œçš„ç¬¬ä¸€åˆ°ç¬¬ä¹æ¬„ååšæ›´æ”¹
+#³]©w1~9ªºÄæ¦W
 setnames(wed[[1]], 1:9,
          c('stno', 'yyyymmddhh', 'PSO1', 'TX01', 'RH01',
            'WD01', 'WD02', 'PP01', 'SS01'))
 
-#å°‡ç¬¬äºŒæ¬„çš„yyyymmddhhæ™‚é–“å…§å®¹çš„å°æ™‚æ¸›å»ä¸€å°æ™‚
+#±Nyyyymmddhh¦¹Äæªº¼Æ­È´î¥h¤@¤p®É¡A¥HÁ×§Kµ{¦¡©¿²¤Åã¥Ü¬°²Ä24¤p®Éªº¸ê®Æ
 wed[[1]]$yyyymmddhh <- wed[[1]]$yyyymmddhh-1
 
-#å°‡yyyymmddhhæ¬„çš„dataè½‰æ›æˆæ™‚é–“æˆ³è¨˜ï¼Œä¸¦æ–°å¢æˆtimestampæ¬„
+#±Nyyyymmddhh¦¹Äæªº¼Æ­ÈÂà´«¬°®É¶¡ÂW°Oªº®æ¦¡¡A¨Ã³]¥ß®É¶¡ÂW°O¤@Äæ
 wed[[1]][, timestamp:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d%H'))]
 
-#å°‡yyyymmddhhæ¬„çš„dataæå–å‡ºå¹´, æœˆ, æ—¥ï¼Œä¸¦ç¨ç«‹æ–°å¢æˆdayæ¬„
+#±qyyyymmddhh¤@Äæ¤¤¥u¿ï¨ú¦~¡B¤ë¡B¤éªº¸ê®Æ¡A¨Ã¿W¥ß¬°day¤@Äæ
 wed[[1]][, day:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d'))]
 
-#å°‡yyyymmddhhæ¬„çš„dataæå–å‡ºå¹´, æœˆï¼Œä¸¦ç¨ç«‹æ–°å¢æˆmonæ¬„
+#¦Ûyyyymmddhh¤¤¿ï¨ú¦~¡B¤ëªº¸ê®Æ¡A¨Ã¿W¥ß¥X¨Ó¦¨mon¤@Äæ
 wed[[1]][, mon:= format.Date(timestamp, '%Y-%m')]
+#¥H¤W§¹¦¨¸ê®Æªº¾ã²z
 
 
 
-
-
-#é–‹å§‹åˆ†æï¼š
-#(1)è¨ˆç®—æ¯æ—¥å¹³å‡æ°£æº«ï¼š
-#è¨­ç«‹è¨ˆç®—å¹³å‡å€¼çš„å…¬å¼
+#°İÃD¡G
+#(1)­pºâ2006¦Ü2015¦~ªº¨C¤é¥­§¡®ğ·Å¡G
+#«Ø¥ß¥­§¡­Èªº­pºâ¤½¦¡
 mean_omit_na <- function(x){
   x <- as.numeric(x)
   return(mean(x, na.rm = T))
 }
 
-#åˆ©ç”¨aggregateå°‡dayæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µåšTX01æ•¸å€¼çš„å¹³å‡å€¼çš„è¨ˆç®—ï¼Œå³å¯å¾—æ¯æ—¥å¹³å‡æ°£æº«
+#§Q¥Î”¨aggregat»E¦X­pºâdayÄædata¬Û¦PªÌ¦bTšTX01Äædataªº¥­§¡­È
+#±N©Ò­pºâ¥Xªº¼Æ­È«Ø¥ßDAYTX¤@ªí®æ¡Aªí®æ¤º®e§Y¬°¨C¤éªº¥­§¡®ğ·Å
 DAYTX <- aggregate(wed[[1]]$TX01, by = list(wed[[1]]$day), FUN = mean_omit_na)
 
 
-
-
-
-#(2)è¨ˆç®—æ¯æœˆå¹³å‡æ°£æº«ï¼š
-#åˆ©ç”¨aggregateå°‡monæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µåšTX01æ•¸å€¼çš„å¹³å‡å€¼çš„è¨ˆç®—ï¼Œå³å¯å¾—æ¯æœˆå¹³å‡æ°£æº«
+#(2)­pºâ2006¦Ü2015¦~ªº¨C¤é¥­§¡®ğ·Å¡G
+#§Q¥Î”¨aggregat»E¦X­pºâmonÄædata¬Û¦PªÌ¦bTšTX01Äædataªº¥­§¡­È
+#±N©Ò­pºâ¥Xªº¼Æ­È«Ø¥ßMONTHTX¤@ªí®æ¡Aªí®æ¤º®e§Y¬°¨C¤ëªº¥­§¡®ğ·Å
 MONTHTX <- aggregate(wed[[1]]$TX01, by = list(wed[[1]]$mon), FUN = mean_omit_na)
 
 
-
-
-
-#(3)è¨ˆç®—æ¯æ—¥æœ€é«˜æº«çš„å¹³å‡ï¼š
-#è¨­ç«‹è¨ˆç®—æœ€å¤§å€¼çš„å…¬å¼
+#(3)­pºâ2006¦Ü2015¦~ªº¨C¤é³Ì°ª·Åªº¥­§¡¡G
+#«Ø¥ß³Ì¤j­Èªº­pºâ¤½¦¡
 MAX <- function(x){
   x <- as.numeric(x)
   return(max(x, na.rm = T))
 }
 
-#åˆ©ç”¨aggregateå°‡dayæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µå–å‡ºTX01æ•¸å€¼çš„æœ€å¤§å€¼ï¼Œå³å¯å¾—æ¯æ—¥æœ€é«˜æº«
+#§Q¥Î”¨aggregat»E¦X­pºâdayÄædata¬Û¦PªÌ¦bTšTX01Äædataªº³Ì¤j­È
+#±N©Ò­pºâ¥Xªº¼Æ­È«Ø¥ßMAXDAY¤@ªí®æ¡Aªí®æ¤º®e§Y¬°¨C¤éªº³Ì°ª·Å
 MAXDAY <- aggregate(wed[[1]]$TX01, by = list (wed[[1]]$day), FUN = MAX)
 
-#å°‡ä»¥ä¸Šæ‰€å¾—çš„æ¯æ—¥æœ€é«˜æº«è¡¨æ ¼è½‰æˆæ›data.frameçš„æ ¼å¼
+#±NMAXDAYªº¸ê®ÆÂà´«¦¨data.frameªº®æ¦¡¡A¨Ã©R¦W¦¨·sªºªí®æ¢w¢wMAXDAYdf
 MAXDAYdf <- data.frame(MAXDAY)
 
-#å–å‡ºè¡¨æ ¼çš„ç¬¬äºŒæ¬„ï¼Œå³æ¯æ—¥æœ€é«˜æº«ä¹‹æº«åº¦åšå¹³å‡
+#¥H­pºâ¥­§¡­Èªº¤½¦¡¡AÅª¨ú¡B­pºâMAXDATdf²Ä¤GÄæªº¸ê®Æ¡A©Ò±o¼Æ­È©R¦W¦¨meanMAXDAY
 meanMAXDAY <- mean(MAXDAYdf[,2])
+
+#meanMAXDAY§Y¬°2006¦Ü2015¦~ªº¨C¤é³Ì°ª·Åªº¥­§¡
 list(meanMAXDAY)
 
 
-
-
-
-#(4)è¨ˆç®—æ¯æ—¥æœ€ä½æº«çš„å¹³å‡ï¼š
-#è¨­ç«‹è¨ˆç®—æœ€å°å€¼çš„å…¬å¼
+#(4)­pºâ2006¦Ü2015¦~ªº¨C¤é³Ì§C·Åªº¥­§¡¡G
+#«Ø¥ß³Ì¤p­Èªº­pºâ¤½¦¡
 MIN <- function(x){
   x <- as.numeric(x)
   return(min(x, na.rm = T))
 }
 
-#åˆ©ç”¨aggregateå°‡dayæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µå–å‡ºTX01æ•¸å€¼çš„æœ€å°å€¼ï¼Œå³å¯å¾—æ¯æ—¥æœ€ä½æº«
+#§Q¥Î”¨aggregat»E¦X­pºâdayÄædata¬Û¦PªÌ¦bTšTX01Äædataªº³Ì¤p­È
+#±N©Ò­pºâ¥Xªº¼Æ­È«Ø¥ßMINDAY¤@ªí®æ¡Aªí®æ¤º®e§Y¬°¨C¤éªº³Ì§C·Å
 MINDAY <- aggregate(wed[[1]]$TX01, by = list (wed[[1]]$day), FUN = MIN)
 
-#å°‡ä»¥ä¸Šæ‰€å¾—çš„æ¯æ—¥æœ€é«˜æº«è¡¨æ ¼è½‰æ›æˆdata.frameçš„æ ¼å¼
+#±NMINDAYªº¸ê®ÆÂà´«¦¨data.frameªº®æ¦¡¡A¨Ã©R¦W¦¨·sªºªí®æ¢w¢wMINDAYdf
 MINDAYdf <- data.frame(MINDAY)
 
-#å–å‡ºè¡¨æ ¼çš„ç¬¬äºŒæ¬„ï¼Œå³æ¯æ—¥æœ€ä½æº«ä¹‹æº«åº¦åšå¹³å‡
+#¥H­pºâ¥­§¡­Èªº¤½¦¡¡AÅª¨ú¡B­pºâMINDATdf²Ä¤GÄæªº¸ê®Æ¡A©Ò±o¼Æ­È©R¦W¦¨meanMINDAY
 meanMINDAY <- mean(MINDAYdf[,2])
+
+#meanMAXDAY§Y¬°2006¦Ü2015¦~ªº¨C¤é³Ì§C·Åªº¥­§¡
 list(meanMINDAY)
 
 
-
-
-
-#(5)è¨ˆç®—æ¯æœˆç´¯ç©é™æ°´ï¼š
-#è¨­ç«‹è¨ˆç®—ç´¯ç©å€¼çš„å…¬å¼
+#(5)­pºâ2006¦Ü2015¦~¥­§¡¨C¤ë²Ö¿n­°¤ô¡G
+#«Ø¥ß­pºâ²Ö¥[­Èªº¤½¦¡
 SUM <- function(x){
   x <- as.numeric(x)
   return(sum(x, na.rm = T))
 }
 
-#åˆ©ç”¨aggregateå°‡monæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µå–å‡ºPP01æ•¸å€¼åšç´¯åŠ ï¼Œå³å¯å¾—æ¯æœˆç´¯ç©é™æ°´é‡
+#§Q¥Î”¨aggregat»E¦X­pºâmonÄædata¬Û¦PªÌ¦bPPX01Äædataªº²Ö¥[­È
+#±N©Ò­pºâ¥Xªº¼Æ­È«Ø¥ßSUMMONTH¤@ªí®æ¡Aªí®æ¤º®e§Y¬°¨C¤ëªº²Ö²Ö£¡²Ö¿n­p«B¶q
 SUMMONTH <- aggregate(wed[[1]]$PP01, by = list (wed[[1]]$mon), FUN = SUM)
 
-#å°‡æ‰€å¾—çš„æ¯æœˆç´¯ç©é™æ°´é‡çš„è¡¨æ ¼è½‰æ›æˆdata.frameçš„æ ¼å¼ï¼Œä¸¦å–å‡ºç¬¬äºŒæ¬„è³‡æ–™ï¼Œå³æ¯æœˆç´¯ç©é™æ°´é‡ï¼Œåšå¹³å‡
+#±NSUMMONTHªº¸ê®ÆÂà´«¦¨data.frameªº®æ¦¡¡A¨Ã©R¦W¦¨·sªºªí®æ¢w¢wSUMMONTHdf
 SUMMONTHdf <- data.frame(SUMMONTH)
+
+#¥H­pºâ¥­§¡­Èªº¤½¦¡¡AÅª¨ú¡B­pºâSUMMONTHdf²Ä¤GÄæªº¸ê®Æ¡A©Ò±o¼Æ­È©R¦W¦¨meanSUMMONTH
 meanSUMMONTH <- mean(SUMMONTHdf[,2])
+
+#meanSUMMONTH§Y¬°2006¦Ü2015¦~¨C¤ë²Ö¿n«B¶qªº¥­§¡
 list(meanSUMMONTH)
 
 
-
-
-
-
-#(6)è¨ˆç®—æœ€æš–æœˆçš„æ¯æ—¥æœ€é«˜æº«å¹³å‡ï¼š
-#å°‡å‰é¢æ‰€åšæ¯æœˆå¹³å‡æ°£æº«çš„è¡¨æ ¼è½‰æ›æˆdata.frameçš„æ ¼å¼
+#(6)­pºâ³Ì·x¤ëªº¨C¤é³Ì°ª·Å¥­§¡¡G
+#±N°O¸ü¨C¤ë¥­§¡®ğ·Åªºªí®æ¢w¢wMONTHTXÂà¶×¦¨data.frameªº®æ¦¡
 MONTHTXdf <- data.frame(MONTHTX)
 
-#åˆ©ç”¨setorder,å°æ¯æœˆå¹³å‡æ°£æº«çš„è¡¨æ ¼ä»¥ç¬¬äºŒæ¬„ï¼Œå³æ°£æº«åšæ’åºï¼Œç”±å°è‡³å¤§
+#¹ïMONTHTXdf¤¤°O¸ü¨C¤ë¥­§¡®ğ·ÅªºxÄæ¶i¦æ±Æ§Ç¡A³Ì«á¤@¶µ¬°³Ì¤j­È
+#¨Ã«Ø¥ß·sªí®æ¢w¢worderedMONTHTXdf
 orderedMONTHTXdf <- setorder(MONTHTXdf,x)
 
-#å–å‡ºç¬¬ä¸€æ¬„ï¼Œæœ€å¾Œä¸€åˆ—çš„dataï¼Œå³å¾—åˆ°æœˆå‡æº«æœ€é«˜çš„å¹´æœˆ
+#Åª¨ú°O¸ü¦~¤ë¥÷ªº²Ä¤@Äæ³Ì«á¤@¶µªº¼Æ­È¡A¦¹§Y¬°³Ì·x¤ëªº¦~¤ë¥÷
 orderedMONTHTXdf[length(list),1]
 
 
 
-#åˆ©ç”¨freadè®€å–å±¬æ–¼orderedMONTHTXdf[length(list),1]æ‰€é¡¯ç¤ºä¹‹å¹´æœˆ(æœ€æš–æœˆ)çš„æ°£è±¡è³‡æ–™
+#§Q¥Î”¨freadÅª¨úorderedMONTHTXdf[length(list),1]©Ò±o¥Xªº³Ì·x¤ëªº¦~¤ë¥÷ªº®ğ¶H¸ê®Æ
+#code¼gªkÀ³¬°fread("c:\\Users/admin/Desktop/raw/³Ì·x¤ëªº®ğ¶H¸ê®ÆÀÉ®×¦W", ......)
+#±N¸ê®Æ¤¤¬°ˆ×-9991, -9995, -9996, -9997, -9998, -9999ªº¿ù»~¼Æ­È§ï¬°NA
 MAXMONTHdayTX <- fread("c:\\Users/admin/Desktop/raw/", 
                        skip = 75,
                        na.strings = c('-9991', '-9995', '-9996', '-9997', '-9998', '-9999'))
 
-#å°è®€å–çš„è³‡æ–™åšå¦‚ä¸€é–‹å§‹ä»¥forè¿´åœˆè®€å–æ•´ç­†è³‡æ–™æ™‚ç›¸åŒçš„æ•´ç†æ–¹å¼
+#³]©w1~9ÄæªºÄæ¦W
 setnames(MAXMONTHdayTX, 1:9,
          c('stno', 'yyyymmddhh', 'PSO1', 'TX01', 'RH01',
            'WD01', 'WD02', 'PP01', 'SS01'))
+
+#±Nyyyymmddhh¦¹Äæªº¼Æ­È´î¥h¤@¤p®É¡A¥HÁ×§Kµ{¦¡©¿²¤Åã¥Ü¬°²Ä24¤p®Éªº¸ê®Æ
 MAXMONTHdayTX$yyyymmddhh <- MAXMONTHdayTX$yyyymmddhh-1
+
+#±Nyyyymmddhh¦¹Äæªº¼Æ­ÈÂà´«¬°®É¶¡ÂW°Oªº®æ¦¡¡A¨Ã³]¥ß®É¶¡ÂW°O¤@Äæ
 MAXMONTHdayTX[, timestamp:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d%H'))]
+
+#±qyyyymmddhh¤@Äæ¤¤¥u¿ï¨ú¦~¡B¤ë¡B¤éªº¸ê®Æ¡A¨Ã¿W¥ß¬°day¤@Äæ
 MAXMONTHdayTX[, day:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d'))]
 
-#åˆ©ç”¨aggregateå°‡dayæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µå–å‡ºTX01æ•¸å€¼çš„æœ€å¤§å€¼ï¼Œå³å¯å¾—æœ€æš–æœˆä¹‹æ¯æ—¥æœ€é«˜æº«
+#§Q¥Î”¨aggregat»E¦X­pºâdayÄædata¬Û¦PªÌ¦bTX01Äædataªº³Ì¤j­È
+#«Ø¥ß¤@ªí®æ¢w¢wMAXMONTHdayMAXTX¡A°O¸ü³Ì·x¤ëªº¨C¤é³Ì°ª·Å
 MAXMONTHdayMAXTX <- aggregate(MAXMONTHdayTX$TX01, by = list(MAXMONTHdayTX$day), FUN = MAX)
 
-#å°‡æ‰€å¾—æœ€æš–æœˆçš„æ¯æ—¥æœ€é«˜æº«å¹³å‡
+
+#¨Ï¥Î­pºâ¥­§¡­Èªº¤½¦¡­pºâMAXMONTHdayMAXTX²Ä¤GÄæªºdata¡A¤]´N¬O¹ï³Ì·x¤ëªº¨C¤é³Ì°ª·Å°µ¥­§¡­pºâ
 lastMAXanswer <- mean(MAXMONTHdayMAXTX[,2])
+
+#­pºâ¥Xªº³Ì«áµ²ªG§Y¬°³Ì·x¤ëªº¨C¤é³Ì°ª·Å¥­§¡
 lastMAXanswer 
 
 
-
-#(7)è¨ˆç®—æœ€å†·æœˆçš„æ¯æ—¥æœ€ä½æº«å¹³å‡ï¼š
-#å–å‡ºå‰ä¸€é¡Œä¸­æ‰€å¾—å®Œæˆæ’åºä¹‹æ¯æœˆå¹³å‡æ°£æº«è¡¨æ ¼çš„ç¬¬ä¸€æ¬„ï¼Œç¬¬ä¸€åˆ—dataï¼Œå³å¾—åˆ°æœˆå‡æº«æœ€ä½çš„å¹´æœˆ
+#(7)­pºâ³Ì§N¤ëªº¨C¤é³Ì§C·Å¥­§¡¡G
+#©ÓÄò°İÃD(6)¡A¹ïMONTHTXdf¤¤°O¸ü¨C¤ë¥­§¡®ğ·ÅªºxÄæ¶i¦æ±Æ§Ç¡A²Ä¤@¶µ¬°³Ì¤p­È
+#«Ø¥ß·sªí®æ¢w¢worderedMONTHTXdf
+#Åª¨úorderedMONTHTXdfªº²Ä¤@¶µ²Ä¤@¦Cdata§Y¬O³Ì§N¤ëªº¦~¤ë¥÷
 orderedMONTHTXdf[1,1]
 
-
-#åˆ©ç”¨freadè®€å–å±¬æ–¼orderedMONTHTXdf[1,1]æ‰€é¡¯ç¤ºä¹‹å¹´æœˆ(æœ€å†·æœˆ)çš„æ°£è±¡è³‡æ–™
+#§Q¥Î”¨freadÅª¨úorderedMONTHTXdf[1,1]©Ò±o¥Xªº³Ì§N¤ëªº¦~¤ë¥÷ªº®ğ¶H¸ê®Æ
+#code¼gªkÀ³¬°fread("c:\\Users/admin/Desktop/raw/³Ì§N¤ëªº®ğ¶H¸ê®ÆÀÉ®×¦W", ......)
+#±N¸ê®Æ¤¤¬°ˆ×-9991, -9995, -9996, -9997, -9998, -9999ªº¿ù»~¼Æ­È§ï¬°NA
 MINMONTHdayTX <- fread("c:\\Users/admin/Desktop/raw/", 
                        skip = 75,
                        na.strings = c('-9991', '-9995', '-9996', '-9997', '-9998', '-9999'))
 
-#å°è®€å–çš„è³‡æ–™åšå¦‚ä¸€é–‹å§‹ä»¥forè¿´åœˆè®€å–æ•´ç­†è³‡æ–™æ™‚ç›¸åŒçš„æ•´ç†æ–¹å¼
+##³]©w1~9ÄæªºÄæ¦W
 setnames(MINMONTHdayTX, 1:9,
          c('stno', 'yyyymmddhh', 'PSO1', 'TX01', 'RH01',
            'WD01', 'WD02', 'PP01', 'SS01'))
+
+#±Nyyyymmddhh¦¹Äæªº¼Æ­È´î¥h¤@¤p®É¡A¥HÁ×§Kµ{¦¡©¿²¤Åã¥Ü¬°²Ä24¤p®Éªº¸ê®Æ
 MINMONTHdayTX$yyyymmddhh <- MINMONTHdayTX$yyyymmddhh-1
+
+#±Nyyyymmddhh¦¹Äæªº¼Æ­ÈÂà´«¬°®É¶¡ÂW°Oªº®æ¦¡¡A¨Ã³]¥ß®É¶¡ÂW°O¤@Äæ
 MINMONTHdayTX[, timestamp:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d%H'))]
+
+#±qyyyymmddhh¤@Äæ¤¤¥u¿ï¨ú¦~¡B¤ë¡B¤éªº¸ê®Æ¡A¨Ã¿W¥ß¬°day¤@Äæ
 MINMONTHdayTX[, day:= as.POSIXct (strptime(yyyymmddhh, '%Y%m%d'))]
 
-#åˆ©ç”¨aggregateå°‡dayæ¬„å…§æ•¸å­—ç›¸åŒè€…åˆä½µå–å‡ºTX01æ•¸å€¼çš„æœ€å°å€¼ï¼Œå³å¯å¾—æœ€å†·æœˆä¹‹æ¯æ—¥æœ€ä½æº«
+#§Q¥Î”¨aggregat»E¦X­pºâdayÄædata¬Û¦PªÌ¦bTX01Äædataªº³Ì¤p­È
+#«Ø¥ß¤@ªí®æ¢w¢wMINMONTHdayMINTX¡A°O¸ü³Ì§N¤ëªº¨C¤é³Ì§C·Å
 MINMONTHdayMINTX <- aggregate(MINMONTHdayTX$TX01, by = list(MINMONTHdayTX$day), FUN = MIN)
 
-#å°‡æ‰€å¾—æœ€å†·æœˆçš„æ¯æ—¥æœ€ä½æº«å¹³å‡
+##¨Ï¥Î­pºâ¥­§¡­Èªº¤½¦¡­pºâMINMONTHdayMINTX²Ä¤GÄæªºdata¡A¤]´N¬O¹ï³Ì§N¤ëªº¨C¤é³Ì§C·Å°µ¥­§¡­pºâ
 lastMINanswer <- mean(MINMONTHdayMINTX[,2])
-lastMINanswer 
 
+#­pºâ¥Xªº³Ì«áµ²ªG§Y¬°³Ì§N¤ëªº¨C¤é³Ì§C·Å¥­§¡
+lastMINanswer 
 
 
 
