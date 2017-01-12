@@ -1,0 +1,6 @@
+矩陣
+更改處；備註；預設：matrix(data,nrow,ncol,byrow = F(FALSE)) => 以利列優先排序的矩陣 ；更改成以欄優先排列的矩陣：matrix(data,nrow,ncol,byrow = T(TURE))
+[列,行]
+行：直線：↓
+列：橫線：→
+sep (功用：以什麼東西分隔兩個字串，預設為以單擊半形空白鍵分隔)

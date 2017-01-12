@@ -1,0 +1,204 @@
+(10/1-費布拿西數列：
+
+fib  <- function(n)
+{
+    if (length(n) > 1) return(sapply(n, fib)) # accept a numeric vector
+    if (n == 1) return(1) # first seed value
+    if (n == 2) return(1) # second seed value
+    return(fib(n-1)+fib(n-2)) # use recursion
+}
+
+# print first five Fibonacci numbers
+fib(1)
+fib(2)
+fib(3)
+fib(4)
+fib(5)
+
+# verify the Fibonacci sequence 1 through 10
+(actual <- fib(1:10))
+(expected <- c(1,1,2,3,5,8,13,21,34,55))
+all.equal(actual,expected)
+
+
+
+
+(10/8-上課範例檔案: R 的資料結構：
+# R 資料結構
+# 取 50 個整數
+x <- sample(50)
+x
+# 轉換成矩陣
+x.m <- matrix(x, nrow = 10)
+# 轉換成資料框架
+x.df <- data.frame(x.m)
+x.m
+# 第三行取 log10 ，並取代原本的資料
+x.m[,3] <- log10(x.m[,3])
+
+x.m[,3]
+x.m[3, x.m[3,] > 10]
+summary(x.m)
+
+(10/8-指定變數、函式等： 
+## 指定變數
+
+x <- 1
+y <- "1"
+LETTERS[25]
+1:50
+
+# 匯率換算
+# 指定變數名稱為 USDTWD，其值為 31.53
+USDTWD <- 31.53
+# 15 USD 等於多少新臺幣呢？
+15 * 31.53
+15 * USDTWD
+
+# usdtwdConv function
+# arguments:
+#   * usd 美金的數目
+#   * USDTWD 新臺幣的匯率，預設值是 31.5
+usdtwdConv <- function(usd, USDTWD = 31.5){
+  twd <- usd * USDTWD
+  # return 代表傳回的數值或資料
+  return(twd)
+}
+
+(10/8-流程控制：
+rm( list = ls() )
+
+
+forecast <- function() {
+  # 建立一個「天氣」的向量
+  x <- c('下雨', '颱風', '下雪', 
+         '晴天', '陰天', '冰雹')
+  action <- c('帶傘', '宅在家', '出門玩')
+  # 隨機排列，並且取出第一個「天氣」現象
+  # 並命名為 weather (變數)
+  weather <- sample(x)[1]
+
+  # 更複雜的判斷與行動
+  if ( weather == '冰雹' | weather == '颱風' ) {
+    # 宅在家
+    print(paste('現在天氣是', weather, 
+                '，所以', action[2], sep=""))
+  } else if ( weather == '下雨' ) {
+    # 帶傘
+    print(paste('現在天氣是', weather, 
+                '，所以', action[1], sep=""))
+  } else {
+    # 出門玩
+    print(paste('現在天氣是', weather, 
+                '，所以', action[3], sep=""))
+  }
+}  
+
+forecast()
+
+#### part 2: 迴圈
+print(1)
+print(2)
+print(3)
+print(4)
+print(5)
+print(6)
+print(7)
+print(8)
+print(9)
+print(10)
+
+# for 迴圈的作法
+for ( i in 1:6 ) {
+  print(i)
+}
+
+i <- 1
+while ( i <= 6 ){
+  print(i)
+  # i 自動加 1
+  i <- i + 1
+}
+
+# Fibonacci 數列
+# 1 2 3 4 5 6 7  8  9 10
+# 0 1 1 2 3 5 8 13 21 34
+fib <- integer(10)
+fib <- vector(mode = 'integer', length = 10)
+
+fib[1] <- 0
+fib[2] <- 1
+fib[3] <- fib[1] + fib[2]
+fib[4] <- fib[2] + fib[3]
+fib[5] <- fib[3] + fib[4]
+fib[6] <- fib[4] + fib[5]
+fib[7] <- fib[5] + fib[6]
+fib[8] <- fib[6] + fib[7]
+fib[9] <- fib[7] + fib[8]
+fib[10] <- fib[8] + fib[9]
+
+# 用迴圈的方式
+fib <- integer(15)
+fib[1] <- 0
+fib[2] <- 1
+for ( i in 3:15 ){
+  fib[i] <- fib[i-2] + fib[i-1]
+}
+fib
+
+# function 的作法
+fibonacci <- function(n){
+  # 先建立 n 個位置等待填滿數值 
+  fib <- integer(n)
+  # 如果 n 為 1 的話，直接傳回 0 
+  if ( n == 1 ){
+    return(0)
+  # 若 n 為 2 的話，傳回 0, 1
+  } else if ( n == 2 ){
+    return(c(0, 1))
+
+  } else {
+    fib[1] <- 0
+    fib[2] <- 1
+    for ( i in 3:n ){
+      fib[i] <- fib[i-2] + fib[i-1]
+    }
+    return(fib)
+  }
+}
+
+fibonacci(5)
+fibonacci(15)
+fibonacci(23)
+fibonacci(3)
+
+10/28
+get rmarkdown => ok
+#讀取多個檔案
+Method1：
+files <- list.files('.')     ( .：表示這目錄下所有的檔案的list)
+cw <- list()
+(#以下為迴圈)
+for( i in 1 : length(files)){
+     print(i)
+     cwb[[i]] <-fread(files[i], skip = 75)
+}
+cwb[[1]] <- fread(files[1], skip = 75)
+#[[維度 =>氣象資料有多個維度，因為含溫度、風速等，一種為一個維度]]
+#how to use "append" on R
+#pattern = auto抓出含auto的資料
+Method2：
+cwb2 <- ceb[[1]]
+for ( i in 2 : length
+rbind
+
+#新增
+ppap <- function(){
+   p <- c( " a pen ", " an apple ", " a pineapple ")
+#random sampling
+n <- sample(3)[1]
+massage <- sprintf (" This is %s ", p[ n])
+return(message)
+}
+i <- 1
+%s的意思是?

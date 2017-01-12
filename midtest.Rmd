@@ -1,0 +1,6 @@
+---
+title: "2016midtest"
+author: "蔡陳友"
+date: "2016年12月2日"
+output: html_document
+---

@@ -1,0 +1,14 @@
+Version: 1.0
+
+RetoreWorkspace: Default
+SaveWorkspace: Default
+AlwaySaveHistory: Default
+
+EnableCodeIndexing: Yes
+UseSpacesForTab: Yes 
+NumspaceForTab: 2
+Encoding: UTF-8
+
+RnWeave:Sweave
+LaTeX: XeLaTeX
+

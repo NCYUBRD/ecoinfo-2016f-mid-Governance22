@@ -7,7 +7,7 @@ ts <- 2016111815
 library(data.table)
 
 #設立工作目錄，以便在此目錄中進行指令的撰寫和操作
-setwd("c:\\Users/admin/Desktop/raw/")
+setwd("D:\\Users/admin/Desktop/raw/")
 
 #建立空的檔案空間，將目錄中所有檔案的data放進去
 list <- list.files('.')
